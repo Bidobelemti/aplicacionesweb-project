@@ -6,7 +6,7 @@
 
 ```bash
 git clone https://github.com/Bidobelemti/aplicacionesweb-project
-cd cd aplicacionesweb-project
+cd aplicacionesweb-project
 
 ```
 ## 2. Inicializar el entorno virtual
