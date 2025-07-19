@@ -8,3 +8,6 @@ __pycache__/
 # Ignorar base de datos local (si la usaras)
 *.sqlite3
 
+#ignorar archivos configuración 
+
+frontend/node_modules/
