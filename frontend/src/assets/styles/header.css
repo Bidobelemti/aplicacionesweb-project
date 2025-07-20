@@ -1,0 +1,33 @@
+.header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* Contenedor del grupo izquierdo */
+.header .left-nav {
+  display: flex;
+  align-items: center;
+}
+
+/* Contenedor del grupo derecho */
+.header .right-nav {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos para los links */
+.header a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 18px;
+}
+
+.header a:hover {
+  text-decoration: underline;
+}

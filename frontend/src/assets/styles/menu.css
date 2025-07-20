@@ -1,0 +1,108 @@
+.menu-page {
+  max-width: 900px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  padding: 0 20px;
+}
+
+.menu-page h1 {
+  text-align: center;
+  font-size: 2.8rem;
+  margin-bottom: 40px;
+  color: #007bff;
+}
+
+/* Contenedores flexibles para dividir platos y pedido */
+.menu-page .menu-list,
+.menu-page .order-summary {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 25px 30px;
+  background-color: #fafafa;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+/* Títulos secciones secundarias */
+.menu-page h2 {
+  margin-bottom: 20px;
+  color: #0056b3;
+  font-size: 1.8rem;
+}
+
+/* Listas sin estilos */
+.menu-page ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Ítems del menú y pedido */
+.menu-page li {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-page li:last-child {
+  border-bottom: none;
+}
+
+/* Nombre y precio */
+.menu-page li h3 {
+  margin: 0 0 5px;
+  font-size: 1.3rem;
+  color: #222;
+}
+
+.menu-page li p {
+  margin: 0;
+  color: #666;
+  font-weight: 600;
+  min-width: 130px;
+  text-align: right;
+}
+
+/* Estado del plato */
+.menu-page li p:nth-child(3) {
+  font-weight: normal;
+  font-style: italic;
+  color: #888;
+  min-width: auto;
+  text-align: left;
+  margin-left: 20px;
+}
+
+/* Botones */
+.menu-page button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.menu-page button:hover {
+  background-color: #0056b3;
+}
+
+/* Total del pedido */
+.menu-page h3 {
+  text-align: right;
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-top: 20px;
+}
+
+/* Separador */
+.menu-page hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 30px 0;
+}
