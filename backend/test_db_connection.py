@@ -4,7 +4,7 @@ from django.db import connections
 from django.db.utils import OperationalError
 
 # 🔧 Esto le dice a Django dónde está tu archivo de configuración
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "model.settings")
 django.setup()
 
 # 🧪 Probar conexión
