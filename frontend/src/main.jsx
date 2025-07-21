@@ -11,6 +11,7 @@ import './assets/styles/login.css';
 import './assets/styles/register.css';
 import './assets/styles/reservations.css';
 import './assets/styles/orderForm.css';
+import './assets/styles/salas.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

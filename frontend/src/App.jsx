@@ -7,7 +7,11 @@ import MyReservations from './pages/MyReservations';
 import Orders from './pages/Orders';
 import MenuPage from './pages/MenuPage';
 import Header from './components/Header';
-import PrivateRoute from './components/PrivateRoute'; // Importar PrivateRoute
+import PrivateRoute from './components/PrivateRoute'; 
+import Salas from './pages/Tables';
+import Reservas from './components/Reservas';
+import ReservationForm from './components/ReservationForm';
+import UserReservations from './components/UserReservations';
 
 const App = () => {
     return (
@@ -25,11 +29,6 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
 
-                    {/* Rutas privadas (solo accesibles si el usuario está autenticado) */}
-                    <Route 
-                        path="/reservas" 
-                        element={<PrivateRoute element={<MyReservations />} />} 
-                    />
                     <Route 
                         path="/pedidos" 
                         element={<PrivateRoute element={<Orders />} />} 
@@ -37,6 +36,9 @@ const App = () => {
 
                     {/* Rutas públicas */}
                     <Route path="/menu" element={<MenuPage />} />
+                    <Route path="/salas" element={<Salas />} />
+                    <Route path="/reservas" element={<Reservas />} />
+                    <Route path="/mis-reservas" element={<UserReservations />} />
                 </Routes>
             </div>
         </Router>

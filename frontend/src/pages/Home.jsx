@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Menu from '../components/Menu';
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -15,12 +15,14 @@ const Home = () => {
       <p>Explora las opciones disponibles y realiza tu reserva.</p>
       <button className="btn-primary" onClick={handleClick}>Ver Menú</button>
       <nav>
+        <Link to="/salas">Salas</Link>
         <Link to="/reservas">Reservas</Link>
         <Link to="/pedidos">Pedidos</Link>
         <Link to="/login">Iniciar Sesión</Link>
         <Link to="/register">Regístrate</Link>
+        
       </nav>
-      <Menu />
+      
     </div>
   );
 };
