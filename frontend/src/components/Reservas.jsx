@@ -92,6 +92,7 @@ function CrearReserva() {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Hacer Reserva</h2>
+      <p>Nombre:</p>
       <input
         type="text"
         placeholder="Nombre"
@@ -99,6 +100,7 @@ function CrearReserva() {
         onChange={(e) => setNombreUsuario(e.target.value)}
         required
       />
+      <p>ID de la sala:</p>
       <input
         type="number"
         placeholder="ID de la sala"
@@ -106,18 +108,21 @@ function CrearReserva() {
         onChange={(e) => setSalaId(e.target.value)}
         required
       />
+      <p>Fecha:</p>
       <input
         type="date"
         value={fechaReserva}
         onChange={(e) => setFechaReserva(e.target.value)}
         required
       />
+      <p>Hora de Inicio:</p>
       <input
         type="time"
         value={horaInicio}
         onChange={(e) => setHoraInicio(e.target.value)}
         required
       />
+      <p>Hora de Fin:</p>
       <input
         type="time"
         value={horaFin}

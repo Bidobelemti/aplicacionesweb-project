@@ -16,6 +16,14 @@ h2 {
   margin-bottom: 20px;
 }
 
+form p {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+
 /* Estilo para los inputs */
 input {
   width: 100%;
