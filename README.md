@@ -32,3 +32,7 @@ python .\backend\test_db_connection.py
 
 Se espera que lleguemos a obtener la siguiente salida
 Conexión exitosa con la base de datos de Render!
+
+
+[!TIP]
+Un consejo útil o una sugerencia
