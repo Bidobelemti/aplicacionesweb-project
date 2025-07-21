@@ -20,10 +20,9 @@ const Header = () => {
             <nav className="right-nav">
                 {user ? (
                 <>
-                    <Link to="/profile">Perfil</Link>
                     <Link to="/reservas">Mis Reservas</Link>
                     <Link to="/pedidos">Mis Pedidos</Link>
-                    <button onClick={handleLogout}>Logout</button>
+                    <button onClick={handleLogout}>Cerrar sesión</button>
                 </>
                 ) : (
                 <>

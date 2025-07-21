@@ -25,6 +25,7 @@ const Register = () => {
             alert('Registro exitoso');
         } catch (error) {
             setError('Error en el registro', error);
+            console.error(error);
         }
     };
 

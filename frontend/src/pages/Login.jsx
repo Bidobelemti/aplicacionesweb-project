@@ -6,7 +6,8 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const history = useNavigate();
+    const [successMessage, setSuccessMessage] = useState(''); 
+    const navigate = useNavigate(); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -14,37 +15,43 @@ const Login = () => {
         try {
             const user = await authService.login({ email, password });
             if (user) {
-                history.push('/dashboard'); // O donde redirijas después de hacer login
+                setSuccessMessage('Inicio de sesión exitoso. Redirigiendo...');
+                setError('');
+                setTimeout(() => {
+                    navigate('/'); 
+                }, 1000); 
             }
         } catch (error) {
-            setError('Error al iniciar sesión. Por favor verifique sus credenciales.', error);
+            setError(error.message || 'Error al iniciar sesión. Por favor verifique sus credenciales.');
+            setSuccessMessage('');
+            console.error(error); 
         }
     };
 
     return (
         <div className="login-container">
             <h2>Iniciar Sesión</h2>
-            {error && <p>{error}</p>}
+            {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} {/* Mensaje de éxito */}
+            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Mostrar el mensaje de error */}
             <form onSubmit={handleSubmit}>
-            <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                required
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-            />
-            <button type="submit">Login</button>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                />
+                <button type="submit">Iniciar Sesión</button>
             </form>
         </div>
-        );
-
+    );
 };
 
 export default Login;

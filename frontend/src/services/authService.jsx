@@ -1,11 +1,11 @@
 import api from './../api';
 
 const register = (userData) => {
-    return api.post('register', userData);
+    return api.post('http://localhost:8000/api/users/register/', userData);
 };
 
 const login = (credentials) => {
-    return api.post('login', credentials)
+    return api.post('http://localhost:8000/api/users/login/', credentials)
         .then(response => {
             if (response.data.token) {
                 localStorage.setItem('user', JSON.stringify(response.data));

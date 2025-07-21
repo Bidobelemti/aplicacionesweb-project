@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
-
 // Importa los estilos globales
 import './assets/styles/header.css'; 
 import './assets/styles/home.css';
