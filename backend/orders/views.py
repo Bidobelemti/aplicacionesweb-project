@@ -88,36 +88,149 @@ def create_order_with_items(request):
         order_serializer = CreateOrderSerializer(data=request.data)
 
         if order_serializer.is_valid():
-            print("DEBUG: Serializer is valid. Proceeding to create order...") # Deja este print para depurar
+            print("DEBUG: Serializer is valid. Proceeding to create order...")
             validated_data = order_serializer.validated_data
-            print(f"DEBUG: validated_data: {validated_data}") # Deja este print para depurar
+            print(f"DEBUG: validated_data: {validated_data}")
 
             mesero_id = validated_data['mesero_id']
             order_type = validated_data['order_type']
             items_data = validated_data['items']
+            
+            # Obtener el mesero
+            try:
+                mesero = User.objects.get(id=mesero_id)
+            except User.DoesNotExist:
+                return Response(
+                    {'error': f'Mesero con ID {mesero_id} no encontrado'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Calcular el monto base sumando los items
+            monto_base = Decimal('0.00')
+            for item_data in items_data:
+                menu_item_id = item_data['menu_item_id']
+                cantidad = item_data['cantidad']
+                
+                try:
+                    menu_item = MenuItem.objects.get(id=menu_item_id)
+                    if not menu_item.disponible:
+                        return Response(
+                            {'error': f'El item {menu_item.nombre} no está disponible'},
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+                    
+                    precio_unitario = item_data.get('precio_unitario', menu_item.precio)
+                    monto_base += cantidad * precio_unitario
+                    
+                except MenuItem.DoesNotExist:
+                    return Response(
+                        {'error': f'MenuItem con ID {menu_item_id} no encontrado'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+            # Crear datos comunes para la orden
+            common_data = {
+                'mesero': mesero,
+                'monto': monto_base,
+                'menu': ', '.join([f"{item['cantidad']}x MenuItem#{item['menu_item_id']}" for item in items_data]),
+                'zona': validated_data.get('zona', 'center'),
+                'numero_personas': validated_data.get('numero_personas', 1),
+                'estado_pago': 'pending'
+            }
+
+            # Crear la orden según el tipo
             order = None
+            if order_type == 'eatin':
+                mesa = validated_data.get('mesa')
+                if not mesa:
+                    return Response(
+                        {'error': 'Los pedidos en mesa requieren número de mesa'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                
+                order = EatInOrder.objects.create(
+                    **common_data,
+                    mesa=mesa
+                )
+                
+            elif order_type == 'takeaway':
+                order = TakeAwayOrder.objects.create(**common_data)
+                
+            elif order_type == 'shipping':
+                direccion_envio = validated_data.get('direccion_envio')
+                telefono_contacto = validated_data.get('telefono_contacto')
+                repartidor_id = validated_data.get('repartidor_id')
+                
+                if not direccion_envio or not telefono_contacto:
+                    return Response(
+                        {'error': 'Los pedidos con envío requieren dirección y teléfono'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                
+                shipping_data = {
+                    **common_data,
+                    'direccion_envio': direccion_envio,
+                    'telefono_contacto': telefono_contacto
+                }
+                
+                if repartidor_id:
+                    try:
+                        repartidor = User.objects.get(id=repartidor_id)
+                        shipping_data['repartidor'] = repartidor
+                    except User.DoesNotExist:
+                        return Response(
+                            {'error': f'Repartidor con ID {repartidor_id} no encontrado'},
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+                
+                order = ShippingOrder.objects.create(**shipping_data)
+            
+            else:
+                return Response(
+                    {'error': 'Tipo de orden no válido'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
-            # ... (Toda la lógica de creación de EatInOrder, TakeAwayOrder, ShippingOrder y OrderItem) ...
+            # Crear los OrderItems
+            for item_data in items_data:
+                menu_item = MenuItem.objects.get(id=item_data['menu_item_id'])
+                precio_unitario = item_data.get('precio_unitario', menu_item.precio)
+                
+                order_item_data = {
+                    'menu_item': menu_item,
+                    'cantidad': item_data['cantidad'],
+                    'precio_unitario': precio_unitario
+                }
+                
+                # Asignar la orden según el tipo
+                if order_type == 'eatin':
+                    order_item_data['eatin_order'] = order
+                elif order_type == 'takeaway':
+                    order_item_data['takeaway_order'] = order
+                elif order_type == 'shipping':
+                    order_item_data['shipping_order'] = order
+                
+                OrderItem.objects.create(**order_item_data)
 
-            # Esto es lo que debería retornar una vez creada la orden
+            # Recargar la orden para obtener los items relacionados
+            order.refresh_from_db()
+
+            # Serializar la respuesta
             if order_type == 'eatin':
                 response_serializer = EatInOrderSerializer(order)
             elif order_type == 'takeaway':
                 response_serializer = TakeAwayOrderSerializer(order)
             elif order_type == 'shipping':
                 response_serializer = ShippingOrderSerializer(order)
+            
             return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
         else:
-            # Esto debería capturar los errores de validación si la data es inválida
-            print(f"DEBUG: Serializer is NOT valid.")
-            print(f"DEBUG: Type of order_serializer.errors: {type(order_serializer.errors)}")
-            print(f"DEBUG: Content of order_serializer.errors: {order_serializer.errors}")
             return Response(order_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
         import traceback
-        traceback.print_exc() # Esto imprimirá el rastro completo del error en la consola
+        traceback.print_exc()
         return Response(
             {'error': f'Error al crear la orden: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
