@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings  # Esto detecta automáticamente a Customer como modelo de usuario
+from management.models import Waiter
 
 class Table(models.Model):
     number = models.IntegerField(unique=True)
@@ -19,7 +20,7 @@ class Booking(models.Model):
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
-    waiter = models.CharField(max_length=100, blank=True, null=True)
+    waiter = models.ForeignKey(Waiter, null=True, blank=True, on_delete=models.SET_NULL, related_name='bookings')
     zone = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
