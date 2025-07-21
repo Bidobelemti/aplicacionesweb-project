@@ -24,7 +24,8 @@ def home(request):
 urlpatterns = [
     path('', home, name='home'),
     path('admin/', admin.site.urls),
-    path('api/users/', include('users.urls')),   # Todas las rutas de users van aquí
-    path('api/orders/', include('orders.urls')), # Agregamos también las rutas de orders
-    path('api/', include('bookings.urls')), #Reservas de mesas
+    path('api/users/', include('users.urls')),       # Rutas de usuarios
+    path('api/orders/', include('orders.urls')),     # Rutas de órdenes
+    path('api/', include('bookings.urls')),          # Rutas de reservas de mesas
+    path('api/management/', include('management.urls')),  # Rutas de meseros y menú
 ]

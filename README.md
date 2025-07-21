@@ -12,8 +12,7 @@ cd aplicacionesweb-project
 ## 2. Inicializar el entorno virtual
 
 ```bash
-python -m venv venv
-.\venv\Scripts\activate
+python -m venv venv .\venv\Scripts\activate
 
 ```
 

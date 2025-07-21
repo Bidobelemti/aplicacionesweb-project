@@ -20,7 +20,11 @@ class CreateBookingView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(customer=self.request.user)
+        booking = serializer.save(customer=self.request.user)
+        # Marcamos la mesa como no disponible
+        booking.table.is_available = False
+        booking.table.save()
+
 
 
 class MyBookingsView(generics.ListAPIView):
@@ -30,7 +34,6 @@ class MyBookingsView(generics.ListAPIView):
     def get_queryset(self):
         return Booking.objects.filter(customer=self.request.user)
 
-
 class DeleteBookingView(generics.DestroyAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
@@ -38,3 +41,9 @@ class DeleteBookingView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return Booking.objects.filter(customer=self.request.user)
+
+    def perform_destroy(self, instance):
+        # Liberamos la mesa al borrar la reserva
+        instance.table.is_available = True
+        instance.table.save()
+        instance.delete()
