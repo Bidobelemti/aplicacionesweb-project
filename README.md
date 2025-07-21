@@ -71,3 +71,19 @@ python manage.py runserver
 
 > [!CAUTION]
 > Puede que la base de datos Postgres de Render no funcione bien algunas veces debido a las migraciones.
+## Configuración de conexión a la base de datos (pgAdmin)
+> [!TIP]
+> Para conectarte a la base de datos desde pgAdmin, usa los siguientes parámetros:
+> 
+> **General tab:**
+> - **Name:** Render DB
+> 
+> **Connection tab:**
+> - **Host name/address:** `(Extraer del External Database URL de Render - es la parte que va después del @ en la URL)`
+> - **Port:** `5432`
+> - **Maintenance DB:** `reservas_salas_db`
+> - **Username:** `root`
+> - **Password:** `(Obtener desde Render)`
+> 
+> ### Nota sobre la URL de Conexión
+> - La URL de Render tiene la estructura: `postgresql://<usuario>:<contraseña>@<host>/<nombre_db>`
