@@ -46,39 +46,25 @@ class BaseOrderSerializer(serializers.ModelSerializer):
 
 
 class EatInOrderSerializer(BaseOrderSerializer):
+    # Usar el nuevo related_name 'eatin_items' con 'source'
+    items = OrderItemSerializer(many=True, read_only=True, source='eatin_items') 
     class Meta(BaseOrderSerializer.Meta):
         model = EatInOrder
-        fields = BaseOrderSerializer.Meta.fields + ['servicio_mesa']
-    
-    def validate(self, data):
-        if not data.get('mesa'):
-            raise serializers.ValidationError("Los pedidos en mesa deben tener asignada una mesa")
-        return data
-
+        fields = BaseOrderSerializer.Meta.fields + ['mesa', 'numero_personas', 'items']
 
 class TakeAwayOrderSerializer(BaseOrderSerializer):
+    # Usar el nuevo related_name 'takeaway_items' con 'source'
+    items = OrderItemSerializer(many=True, read_only=True, source='takeaway_items')
     class Meta(BaseOrderSerializer.Meta):
         model = TakeAwayOrder
-        fields = BaseOrderSerializer.Meta.fields + ['empaque', 'tiempo_preparacion']
-
+        fields = BaseOrderSerializer.Meta.fields + ['numero_personas', 'items']
 
 class ShippingOrderSerializer(BaseOrderSerializer):
-    repartidor = UserSerializer(read_only=True)
-    repartidor_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
-    
+    # Usar el nuevo related_name 'shipping_items' con 'source'
+    items = OrderItemSerializer(many=True, read_only=True, source='shipping_items')
     class Meta(BaseOrderSerializer.Meta):
         model = ShippingOrder
-        fields = BaseOrderSerializer.Meta.fields + [
-            'direccion_envio', 'repartidor', 'repartidor_id', 'costo_envio',
-            'telefono_contacto', 'tiempo_estimado_entrega'
-        ]
-    
-    def validate(self, data):
-        if not data.get('direccion_envio'):
-            raise serializers.ValidationError("Los pedidos con envío deben tener una dirección")
-        if not data.get('telefono_contacto'):
-            raise serializers.ValidationError("Los pedidos con envío deben tener un teléfono de contacto")
-        return data
+        fields = BaseOrderSerializer.Meta.fields + ['direccion_envio', 'telefono_contacto', 'repartidor', 'numero_personas', 'items']
 
 
 class PolymorphicOrderSerializer(serializers.Serializer):
@@ -93,22 +79,23 @@ class PolymorphicOrderSerializer(serializers.Serializer):
             raise serializers.ValidationError("Tipo de orden no reconocido")
 
 
-class CreateOrderSerializer(serializers.Serializer):
-    order_type = serializers.ChoiceField(choices=['eatin', 'takeaway', 'shipping'])
-    mesero_id = serializers.IntegerField()
-    numero_personas = serializers.IntegerField(min_value=1)
-    zona = serializers.CharField()
-    items = serializers.ListField(
-        child=serializers.DictField(),
-        min_length=1
-    )
-    
-    # Campos específicos
+class CreateOrderSerializer(serializers.Serializer): # Cambiado de ModelSerializer a Serializer
+    mesero_id = serializers.IntegerField(write_only=True)
+    order_type = serializers.CharField(write_only=True)
     mesa = serializers.IntegerField(required=False, allow_null=True)
+    numero_personas = serializers.IntegerField(required=False, allow_null=True)
     direccion_envio = serializers.CharField(required=False, allow_blank=True)
     telefono_contacto = serializers.CharField(required=False, allow_blank=True)
     repartidor_id = serializers.IntegerField(required=False, allow_null=True)
-    
+
+    items = OrderItemSerializer(many=True, write_only=True) # Este OrderItemSerializer debería usarse para validar la entrada de ítems.
+
+    # No se necesita la clase Meta con 'model' aquí
+    # class Meta:
+    #     model = None # <-- ESTO YA NO ES NECESARIO NI PERMITIDO PARA serializers.Serializer
+    #     fields = ['order_type', 'mesero_id', 'items', 'mesa', 'numero_personas',
+    #               'direccion_envio', 'telefono_contacto', 'repartidor_id']
+
     def validate_items(self, value):
         for item in value:
             if 'menu_item_id' not in item or 'cantidad' not in item:

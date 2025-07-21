@@ -161,9 +161,9 @@ class OrderItem(models.Model):
     """
     Modelo para los items de cada orden
     """
-    eatin_order = models.ForeignKey(EatInOrder, on_delete=models.CASCADE, null=True, blank=True, related_name='items')
-    takeaway_order = models.ForeignKey(TakeAwayOrder, on_delete=models.CASCADE, null=True, blank=True, related_name='items')
-    shipping_order = models.ForeignKey(ShippingOrder, on_delete=models.CASCADE, null=True, blank=True, related_name='items')
+    eatin_order = models.ForeignKey(EatInOrder, on_delete=models.CASCADE, null=True, blank=True, related_name='eatin_items')
+    takeaway_order = models.ForeignKey(TakeAwayOrder, on_delete=models.CASCADE, null=True, blank=True, related_name='takeaway_items')
+    shipping_order = models.ForeignKey(ShippingOrder, on_delete=models.CASCADE, null=True, blank=True, related_name='shipping_items')
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     precio_unitario = models.DecimalField(max_digits=8, decimal_places=2)
